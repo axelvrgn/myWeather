@@ -9,29 +9,34 @@ import { Divider } from "@chakra-ui/react";
 function HomeView() {
   const [weather, setWeather] = useState<any | null>(null);
   const [location, setLocation] = useState<string>("");
-  useEffect(() => {
-    if (location !== null) {
-      weatherService.getForecastWeather(location).then((weatherRes) => {
-        setWeather(weatherRes.data);
-      });
-    }
-  }, [location]);
+
+  const fetchWeather = (location: string) => {
+    weatherService.getForecastWeather(location).then((weatherRes) => {
+      setWeather(weatherRes.data);
+    });
+  };
+
+  const handleSubmitLocation = (event: React.FormEvent<HTMLFormElement>) => {
+    fetchWeather(location);
+  };
 
   return (
     <PageContainer>
       <div className="pb-4">
-        <div className="flex flex-row-reverse w-96 border rounded-full p-1">
-          <input
-            className="w-11/12 focus:outline-none"
-            placeholder="Chercher une ville, un pays..."
-            name="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-          <button type="button" className="w-1/12">
-            <SearchIcon className="w-1/12" />
-          </button>
-        </div>
+        <form onSubmit={handleSubmitLocation}>
+          <div className="flex flex-row-reverse w-96 border rounded-full p-1">
+            <input
+              className="w-11/12 focus:outline-none"
+              placeholder="Chercher une ville, un pays..."
+              name="location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+            <button type="button" className="w-1/12">
+              <SearchIcon className="w-1/12" />
+            </button>
+          </div>
+        </form>
       </div>
       {location && weather && (
         <div className="border p-3 rounded-lg">
@@ -57,7 +62,7 @@ function HomeView() {
           </div>
           <Divider />
           <div className="flex flex-col p-2">
-            <p className="font-semibold">Prévisions</p>
+            <p className="font-semibold">Prévisions de la journée</p>
             <ul className="overflow-x-auto w-full whitespace-nowrap py-4">
               {weather.forecast.forecastday[0].hour.map(
                 (weatherPerHour: any, index: number) => (
