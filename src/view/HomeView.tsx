@@ -17,6 +17,8 @@ function HomeView() {
   };
 
   const handleSubmitLocation = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(location);
     fetchWeather(location);
   };
 
@@ -32,7 +34,7 @@ function HomeView() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
-            <button type="button" className="w-1/12">
+            <button type="submit" className="w-1/12">
               <SearchIcon className="w-1/12" />
             </button>
           </div>
